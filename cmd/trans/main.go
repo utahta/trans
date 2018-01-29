@@ -7,8 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"cloud.google.com/go/translate"
-	"golang.org/x/text/language"
+	"github.com/utahta/trans"
 	"google.golang.org/api/option"
 )
 
@@ -42,6 +41,7 @@ func run() error {
 	flag.StringVar(&opts.CredentialsFile, "c", "", "Sets the service account JSON credentials file")
 	flag.Parse()
 	if opts.ShowHelp {
+		fmt.Println("Usage: trans -t ja TEXT")
 		flag.PrintDefaults()
 		return nil
 	}
@@ -57,33 +57,16 @@ func run() error {
 		clientOpts = append(clientOpts, option.WithCredentialsFile(opts.CredentialsFile))
 	}
 
-	c, err := translate.NewClient(ctx, clientOpts...)
+	c, err := trans.New(ctx, clientOpts...)
 	if err != nil {
 		return err
 	}
 
-	var (
-		source language.Tag
-		target language.Tag
-	)
-	if opts.Source != "" {
-		source, err = language.Parse(opts.Source)
-		if err != nil {
-			return err
-		}
-	}
-	target, err = language.Parse(opts.Target)
+	text, err := c.Translate(ctx, input, opts.Source, opts.Target)
 	if err != nil {
 		return err
 	}
 
-	trans, err := c.Translate(ctx, []string{input}, target, &translate.Options{Source: source, Format: translate.Text})
-	if err != nil {
-		return err
-	}
-
-	for _, t := range trans {
-		fmt.Println(t.Text)
-	}
+	fmt.Println(text)
 	return nil
 }

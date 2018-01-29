@@ -19,7 +19,7 @@ Need a little bit of money to use google translate API.
 ## Installation
 
 ```sh
-$ go get -u github.com/utahta/trans
+$ go get -u github.com/utahta/trans/cmd/trans
 ```
 
 ## Usage
