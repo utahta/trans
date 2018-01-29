@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"cloud.google.com/go/translate"
 	"golang.org/x/text/language"
@@ -48,7 +49,7 @@ func run() error {
 		fmt.Println("The -t option is required")
 		return nil
 	}
-	inputs := flag.Args()
+	input := strings.Join(flag.Args(), " ")
 
 	ctx := context.Background()
 	var clientOpts []option.ClientOption
@@ -76,7 +77,7 @@ func run() error {
 		return err
 	}
 
-	trans, err := c.Translate(ctx, inputs, target, &translate.Options{Source: source, Format: translate.Text})
+	trans, err := c.Translate(ctx, []string{input}, target, &translate.Options{Source: source, Format: translate.Text})
 	if err != nil {
 		return err
 	}

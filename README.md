@@ -28,4 +28,8 @@ $ go get -u github.com/utahta/trans
 $ trans -t en こんにちは
 Hello
 ```
+```sh
+$ trans -t ja this is a pen
+これはペンです
+```
 
