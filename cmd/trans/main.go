@@ -21,10 +21,18 @@ type Options struct {
 	// Target is the language of the output strings.
 	Target string
 
+	// APIKey is the key of authenticate to the Translation API.
+	// refs https://cloud.google.com/translate/docs/auth#using_an_api_key
+	APIKey string
+
 	// CredentialsFile is the service account JSON credentials file
 	// refs https://cloud.google.com/iam/docs/creating-managing-service-accounts
 	CredentialsFile string
 }
+
+const (
+	envTransAPIKey = "TRANS_API_KEY"
+)
 
 func main() {
 	if err := run(); err != nil {
@@ -38,6 +46,7 @@ func run() error {
 	flag.BoolVar(&opts.ShowHelp, "h", false, "Show help")
 	flag.StringVar(&opts.Source, "s", "", "Sets the source language")
 	flag.StringVar(&opts.Target, "t", "", "Sets the target language")
+	flag.StringVar(&opts.APIKey, "key", "", "Sets the api key")
 	flag.StringVar(&opts.CredentialsFile, "c", "", "Sets the service account JSON credentials file")
 	flag.Parse()
 	if opts.ShowHelp {
@@ -53,6 +62,12 @@ func run() error {
 
 	ctx := context.Background()
 	var clientOpts []option.ClientOption
+	if opts.APIKey != "" {
+		clientOpts = append(clientOpts, option.WithAPIKey(opts.APIKey))
+	} else if os.Getenv(envTransAPIKey) != "" {
+		clientOpts = append(clientOpts, option.WithAPIKey(os.Getenv(envTransAPIKey)))
+	}
+
 	if opts.CredentialsFile != "" {
 		clientOpts = append(clientOpts, option.WithCredentialsFile(opts.CredentialsFile))
 	}
