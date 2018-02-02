@@ -15,6 +15,9 @@ type Options struct {
 	// ShowHelp shows help
 	ShowHelp bool
 
+	// ShowVersion shows version
+	ShowVersion bool
+
 	// Source is the language of the input strings.
 	Source string
 
@@ -30,6 +33,8 @@ type Options struct {
 	CredentialsFile string
 }
 
+var Version string
+
 const (
 	envTransAPIKey = "TRANS_API_KEY"
 )
@@ -44,6 +49,7 @@ func main() {
 func run() error {
 	opts := &Options{}
 	flag.BoolVar(&opts.ShowHelp, "h", false, "Show help")
+	flag.BoolVar(&opts.ShowVersion, "v", false, "Show version")
 	flag.StringVar(&opts.Source, "s", "", "Sets the source language")
 	flag.StringVar(&opts.Target, "t", "", "Sets the target language")
 	flag.StringVar(&opts.APIKey, "key", "", "Sets the api key")
@@ -52,6 +58,10 @@ func run() error {
 	if opts.ShowHelp {
 		fmt.Println("Usage: trans -t ja TEXT")
 		flag.PrintDefaults()
+		return nil
+	}
+	if opts.ShowVersion {
+		fmt.Printf("%s\n", Version)
 		return nil
 	}
 	if opts.Target == "" {
