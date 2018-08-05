@@ -2,6 +2,7 @@ package trans
 
 import (
 	"context"
+	"strings"
 
 	"cloud.google.com/go/translate"
 	"golang.org/x/text/language"
@@ -45,5 +46,8 @@ func (c *Client) Translate(ctx context.Context, input string, s string, t string
 		return "", err
 	}
 
-	return res[0].Text, nil
+	// trim \u200b (ZERO WIDTH SPACE)
+	// http://unicode.org/cldr/utility/character.jsp?a=200B
+	// https://www.fileformat.info/info/unicode/char/200B/index.htm
+	return strings.Replace(res[0].Text, "\u200b", "", -1), nil
 }
