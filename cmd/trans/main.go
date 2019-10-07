@@ -35,9 +35,6 @@ type Options struct {
 
 var Version string
 
-const (
-	envTransAPIKey = "TRANS_API_KEY"
-)
 
 func main() {
 	if err := run(); err != nil {
@@ -74,8 +71,8 @@ func run() error {
 	var clientOpts []option.ClientOption
 	if opts.APIKey != "" {
 		clientOpts = append(clientOpts, option.WithAPIKey(opts.APIKey))
-	} else if os.Getenv(envTransAPIKey) != "" {
-		clientOpts = append(clientOpts, option.WithAPIKey(os.Getenv(envTransAPIKey)))
+	} else if os.Getenv(trans.EnvTransAPIKey) != "" {
+		clientOpts = append(clientOpts, option.WithAPIKey(os.Getenv(trans.EnvTransAPIKey)))
 	}
 
 	if opts.CredentialsFile != "" {
