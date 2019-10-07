@@ -14,6 +14,10 @@ type Client struct {
 	*translate.Client
 }
 
+const (
+	EnvTransAPIKey = "TRANS_API_KEY"
+)
+
 // New returns Client
 func New(ctx context.Context, opts ...option.ClientOption) (*Client, error) {
 	c, err := translate.NewClient(ctx, opts...)

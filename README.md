@@ -14,7 +14,7 @@ The API Key documentation can be found [here](https://cloud.google.com/translate
 
 Set the environment variable `TRANS_API_KEY` to the API Key.
 
-### Service Account
+### Or Service Account
 
 The service account documentation can be found [here](https://cloud.google.com/iam/docs/creating-managing-service-accounts).
 

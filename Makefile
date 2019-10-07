@@ -1,10 +1,14 @@
+export GO111MODULE=on
 
-setup:
-	@dep ensure
+mod:
+	go mod download
+
+build:
+	go build -o ./bin/trans ./cmd/trans
 
 package:
-	@./scripts/package.sh
+	./scripts/package.sh
 
 release: package
-	@./scripts/release.sh
+	./scripts/release.sh
 
