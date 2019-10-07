@@ -5,6 +5,7 @@ distdir=${curdir}/../dist
 
 source ${curdir}/common.sh
 
+export GOFLAGS="-trimpath"
 gox -ldflags="-X main.Version=$(version)" github.com/utahta/trans/cmd/trans/
 
 rm -rf ${distdir}
