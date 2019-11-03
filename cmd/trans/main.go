@@ -24,6 +24,9 @@ type Options struct {
 	// Target is the language of the output strings.
 	Target string
 
+	// Reverse is a reverse translation flag.
+	Reverse bool
+
 	// APIKey is the key of authenticate to the Translation API.
 	// refs https://cloud.google.com/translate/docs/auth#using_an_api_key
 	APIKey string
@@ -34,7 +37,6 @@ type Options struct {
 }
 
 var Version string
-
 
 func main() {
 	if err := run(); err != nil {
@@ -49,6 +51,7 @@ func run() error {
 	flag.BoolVar(&opts.ShowVersion, "v", false, "Show version")
 	flag.StringVar(&opts.Source, "s", "", "Sets the source language")
 	flag.StringVar(&opts.Target, "t", "", "Sets the target language")
+	flag.BoolVar(&opts.Reverse, "r", false, "Sets the reverse translating")
 	flag.StringVar(&opts.APIKey, "key", "", "Sets the api key")
 	flag.StringVar(&opts.CredentialsFile, "c", "", "Sets the service account JSON credentials file")
 	flag.Parse()
@@ -84,7 +87,7 @@ func run() error {
 		return err
 	}
 
-	text, err := c.Translate(ctx, input, opts.Source, opts.Target)
+	text, err := c.Translate(ctx, input, opts.Source, opts.Target, opts.Reverse)
 	if err != nil {
 		return err
 	}

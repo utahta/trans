@@ -41,4 +41,8 @@ Hello
 $ trans -t ja this is a pen
 これはペンです
 ```
-
+```sh
+$ trans -t ja -r "this is a pen"
+これはペンです
+this is a pen
+```
