@@ -9,10 +9,12 @@ import (
 	"google.golang.org/api/option"
 )
 
-// Client represents google translate api client
-type Client struct {
-	*translate.Client
-}
+type (
+	// Client represents google translate api client
+	Client struct {
+		*translate.Client
+	}
+)
 
 const (
 	EnvTransAPIKey = "TRANS_API_KEY"
@@ -28,7 +30,7 @@ func New(ctx context.Context, opts ...option.ClientOption) (*Client, error) {
 }
 
 // Translate translates input text
-func (c *Client) Translate(ctx context.Context, input string, s string, t string) (string, error) {
+func (c *Client) Translate(ctx context.Context, input string, s string, t string, reverse bool) (string, error) {
 	var (
 		source language.Tag
 		target language.Tag
@@ -45,13 +47,31 @@ func (c *Client) Translate(ctx context.Context, input string, s string, t string
 		return "", err
 	}
 
-	res, err := c.Client.Translate(ctx, []string{input}, target, &translate.Options{Source: source, Format: translate.Text})
-	if err != nil {
-		return "", err
+	var outputs []string
+	for {
+		res, err := c.Client.Translate(ctx, []string{input}, target, &translate.Options{Source: source, Format: translate.Text})
+		if err != nil {
+			return "", err
+		}
+
+		// trim \u200b (ZERO WIDTH SPACE)
+		// http://unicode.org/cldr/utility/character.jsp?a=200B
+		// https://www.fileformat.info/info/unicode/char/200B/index.htm
+		outputs = append(outputs, strings.Replace(res[0].Text, "\u200b", "", -1))
+
+		if reverse {
+			reverse = false
+			input = outputs[0]
+			if source.IsRoot() {
+				target = res[0].Source
+			} else {
+				target = source
+			}
+			source = language.Tag{}
+			continue
+		}
+		break
 	}
 
-	// trim \u200b (ZERO WIDTH SPACE)
-	// http://unicode.org/cldr/utility/character.jsp?a=200B
-	// https://www.fileformat.info/info/unicode/char/200B/index.htm
-	return strings.Replace(res[0].Text, "\u200b", "", -1), nil
+	return strings.Join(outputs, "\n"), nil
 }
