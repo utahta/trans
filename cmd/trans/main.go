@@ -51,7 +51,7 @@ func run() error {
 	flag.BoolVar(&opts.ShowVersion, "v", false, "Show version")
 	flag.StringVar(&opts.Source, "s", "", "Sets the source language")
 	flag.StringVar(&opts.Target, "t", "", "Sets the target language")
-	flag.BoolVar(&opts.Reverse, "r", false, "Sets the reverse translating")
+	flag.BoolVar(&opts.Reverse, "r", false, "Enable reverse translation")
 	flag.StringVar(&opts.APIKey, "key", "", "Sets the api key")
 	flag.StringVar(&opts.CredentialsFile, "c", "", "Sets the service account JSON credentials file")
 	flag.Parse()
